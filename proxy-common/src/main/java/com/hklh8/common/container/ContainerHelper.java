@@ -9,34 +9,22 @@ import java.util.List;
  * 容器启动工具类.
  */
 public class ContainerHelper {
-
     private static Logger logger = LoggerFactory.getLogger(ContainerHelper.class);
 
     private static volatile boolean running = true;
-
     private static List<Container> cachedContainers;
-
     public static void start(List<Container> containers) {
-
         cachedContainers = containers;
-
         // 启动所有容器
         startContainers();
-
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-
-            @Override
-            public void run() {
-
-                synchronized (ContainerHelper.class) {
-
-                    // 停止所有容器.
-                    stopContainers();
-                    running = false;
-                    ContainerHelper.class.notify();
-                }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            synchronized (ContainerHelper.class) {
+                // 停止所有容器.
+                stopContainers();
+                running = false;
+                ContainerHelper.class.notify();
             }
-        });
+        }));
 
         synchronized (ContainerHelper.class) {
             while (running) {

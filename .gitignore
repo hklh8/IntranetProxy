@@ -7,5 +7,5 @@ out/
 .classpath
 .project
 .svn/
-
+logs/
 target/
