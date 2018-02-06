@@ -1,4 +1,4 @@
-package com.hklh8.protocol;
+package com.hklh8.common.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

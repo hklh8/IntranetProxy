@@ -41,7 +41,6 @@
     <modules>
         <module>proxy-client</module>
         <module>proxy-common</module>
-        <module>proxy-protocol</module>
         <module>proxy-server</module>
     </modules>
 </project>

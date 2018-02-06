@@ -1,8 +1,8 @@
 package com.hklh8.client.handlers;
 
 import com.hklh8.client.ClientChannelMannager;
-import com.hklh8.protocol.Constants;
-import com.hklh8.protocol.ProxyMessage;
+import com.hklh8.common.protocol.Constants;
+import com.hklh8.common.protocol.ProxyMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

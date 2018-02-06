@@ -21,11 +21,6 @@
             <artifactId>proxy-common</artifactId>
             <version>1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.hklh8</groupId>
-            <artifactId>proxy-protocol</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
     <build>
         <finalName>proxy-server</finalName>

@@ -1,6 +1,6 @@
 package com.hklh8.client;
 
-import com.hklh8.common.Config;
+import com.hklh8.common.utils.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

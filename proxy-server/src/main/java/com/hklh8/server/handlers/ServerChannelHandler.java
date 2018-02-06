@@ -1,7 +1,7 @@
 package com.hklh8.server.handlers;
 
-import com.hklh8.protocol.Constants;
-import com.hklh8.protocol.ProxyMessage;
+import com.hklh8.common.protocol.Constants;
+import com.hklh8.common.protocol.ProxyMessage;
 import com.hklh8.server.ProxyChannelManager;
 import com.hklh8.server.config.ProxyConfig;
 import io.netty.buffer.ByteBuf;

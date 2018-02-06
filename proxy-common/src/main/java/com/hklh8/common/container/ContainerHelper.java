@@ -13,6 +13,7 @@ public class ContainerHelper {
 
     private static volatile boolean running = true;
     private static List<Container> cachedContainers;
+
     public static void start(List<Container> containers) {
         cachedContainers = containers;
         // 启动所有容器

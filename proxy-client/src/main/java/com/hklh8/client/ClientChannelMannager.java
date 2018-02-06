@@ -1,12 +1,11 @@
 package com.hklh8.client;
 
 import com.hklh8.client.listener.ProxyChannelBorrowListener;
-import com.hklh8.common.Config;
-import com.hklh8.protocol.Constants;
+import com.hklh8.common.utils.Config;
+import com.hklh8.common.protocol.Constants;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.util.AttributeKey;

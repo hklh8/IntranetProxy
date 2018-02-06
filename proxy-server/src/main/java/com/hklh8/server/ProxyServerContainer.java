@@ -1,10 +1,10 @@
 package com.hklh8.server;
 
-import com.hklh8.common.Config;
+import com.hklh8.common.utils.Config;
 import com.hklh8.common.container.Container;
-import com.hklh8.protocol.IdleCheckHandler;
-import com.hklh8.protocol.ProxyMessageDecoder;
-import com.hklh8.protocol.ProxyMessageEncoder;
+import com.hklh8.common.protocol.IdleCheckHandler;
+import com.hklh8.common.protocol.ProxyMessageDecoder;
+import com.hklh8.common.protocol.ProxyMessageEncoder;
 import com.hklh8.server.config.ProxyConfig;
 import com.hklh8.server.handlers.ServerChannelHandler;
 import com.hklh8.server.handlers.UserChannelHandler;

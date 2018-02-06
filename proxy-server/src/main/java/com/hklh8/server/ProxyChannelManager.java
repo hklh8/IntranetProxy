@@ -1,6 +1,6 @@
 package com.hklh8.server;
 
-import com.hklh8.protocol.Constants;
+import com.hklh8.common.protocol.Constants;
 import com.hklh8.server.config.ProxyConfig;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;

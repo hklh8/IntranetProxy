@@ -1,4 +1,4 @@
-package com.hklh8.common;
+package com.hklh8.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +37,10 @@ public class LangUtil {
     }
 
     /**
-     * @Title: parseInt
-     * @Description: Int解析方法，可传入Integer或String值
      * @param value Integer或String值
      * @return Integer 返回类型
+     * @Title: parseInt
+     * @Description: Int解析方法，可传入Integer或String值
      */
     public static Integer parseInt(Object value) {
         if (value != null) {
@@ -103,10 +103,10 @@ public class LangUtil {
     }
 
     /**
-     * @Title: parseDouble
-     * @Description: Double解析方法，可传入Double或String值
      * @param value Double或String值
      * @return Double 返回类型
+     * @Title: parseDouble
+     * @Description: Double解析方法，可传入Double或String值
      */
     public static Double parseDouble(Object value) {
         if (value != null) {
@@ -120,10 +120,10 @@ public class LangUtil {
     }
 
     /**
-     * @Title: parseDouble
-     * @Description: Double解析方法，可传入Double或String值
      * @param value Double或String值
      * @return Double 返回类型
+     * @Title: parseDouble
+     * @Description: Double解析方法，可传入Double或String值
      */
     public static Double parseDouble(Object value, Double defaultValue) {
         if (value != null) {

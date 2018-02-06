@@ -1,4 +1,4 @@
-package com.hklh8.protocol;
+package com.hklh8.common.protocol;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -25,7 +25,6 @@ public class IdleCheckHandler extends IdleStateHandler {
 
     @Override
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
-
         if (IdleStateEvent.FIRST_WRITER_IDLE_STATE_EVENT == evt) {
             logger.debug("channel write timeout {}", ctx.channel());
             ProxyMessage proxyMessage = new ProxyMessage();

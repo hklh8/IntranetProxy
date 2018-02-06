@@ -1,4 +1,4 @@
-package com.hklh8.common;
+package com.hklh8.common.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +68,6 @@ public class Config {
      * 获得配置项。
      *
      * @param key 配置关键字
-     *
      * @return 配置项
      */
     public String getStringValue(String key) {
