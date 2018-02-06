@@ -14,28 +14,11 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
 
     private static final int URI_LENGTH_SIZE = 1;
 
-    /**
-     * @param maxFrameLength
-     * @param lengthFieldOffset
-     * @param lengthFieldLength
-     * @param lengthAdjustment
-     * @param initialBytesToStrip
-     */
-    public ProxyMessageDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment,
-            int initialBytesToStrip) {
+    public ProxyMessageDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip) {
         super(maxFrameLength, lengthFieldOffset, lengthFieldLength, lengthAdjustment, initialBytesToStrip);
     }
 
-    /**
-     * @param maxFrameLength
-     * @param lengthFieldOffset
-     * @param lengthFieldLength
-     * @param lengthAdjustment
-     * @param initialBytesToStrip
-     * @param failFast
-     */
-    public ProxyMessageDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment,
-            int initialBytesToStrip, boolean failFast) {
+    public ProxyMessageDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip, boolean failFast) {
         super(maxFrameLength, lengthFieldOffset, lengthFieldLength, lengthAdjustment, initialBytesToStrip, failFast);
     }
 

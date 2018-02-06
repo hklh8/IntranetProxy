@@ -89,7 +89,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
     private void initializeSSLTCPTransport(String host, int port, final SSLContext sslContext) {
         ServerBootstrap b = new ServerBootstrap();
         b.group(serverBossGroup, serverWorkerGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
-
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
@@ -106,7 +105,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
             }
         });
         try {
-
             // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(host, port);
             f.sync();
@@ -119,7 +117,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
     private void startUserPort() {
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(serverBossGroup, serverWorkerGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
-
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addFirst(new BytesMetricsHandler());
@@ -133,7 +130,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
                 bootstrap.bind(port).get();
                 logger.info("bind user port " + port);
             } catch (Exception ex) {
-
                 // BindException表示该端口已经绑定过
                 if (!(ex.getCause() instanceof BindException)) {
                     throw new RuntimeException(ex);

@@ -27,9 +27,9 @@ public class ProxyChannelManager {
 
     private static final AttributeKey<String> CHANNEL_CLIENT_KEY = AttributeKey.newInstance("channel_client_key");
 
-    private static Map<Integer, Channel> portCmdChannelMapping = new ConcurrentHashMap<Integer, Channel>();
+    private static Map<Integer, Channel> portCmdChannelMapping = new ConcurrentHashMap<>();
 
-    private static Map<String, Channel> cmdChannels = new ConcurrentHashMap<String, Channel>();
+    private static Map<String, Channel> cmdChannels = new ConcurrentHashMap<>();
 
     static {
         ProxyConfig.getInstance().addConfigChangedListener(new ProxyConfig.ConfigChangedListener() {
@@ -52,12 +52,11 @@ public class ProxyChannelManager {
                     }
 
                     if (proxyChannel.isActive()) {
-                        List<Integer> inetPorts = new ArrayList<Integer>(ProxyConfig.getInstance().getClientInetPorts(clientKey));
-                        Set<Integer> inetPortSet = new HashSet<Integer>(inetPorts);
-                        List<Integer> channelInetPorts = new ArrayList<Integer>(proxyChannel.attr(CHANNEL_PORT).get());
+                        List<Integer> inetPorts = new ArrayList<>(ProxyConfig.getInstance().getClientInetPorts(clientKey));
+                        Set<Integer> inetPortSet = new HashSet<>(inetPorts);
+                        List<Integer> channelInetPorts = new ArrayList<>(proxyChannel.attr(CHANNEL_PORT).get());
 
                         synchronized (portCmdChannelMapping) {
-
                             // 移除旧的连接映射关系
                             for (int chanelInetPort : channelInetPorts) {
                                 Channel channel = portCmdChannelMapping.get(chanelInetPort);
@@ -68,12 +67,10 @@ public class ProxyChannelManager {
                                 // 判断是否是同一个连接对象，有可能之前已经更换成其他client的连接了
                                 if (proxyChannel == channel) {
                                     if (!inetPortSet.contains(chanelInetPort)) {
-
                                         // 移除新配置中不包含的端口
                                         portCmdChannelMapping.remove(chanelInetPort);
                                         proxyChannel.attr(CHANNEL_PORT).get().remove(new Integer(chanelInetPort));
                                     } else {
-
                                         // 端口已经在改proxyChannel中使用了
                                         inetPorts.remove(new Integer(chanelInetPort));
                                     }
@@ -85,7 +82,6 @@ public class ProxyChannelManager {
                                 portCmdChannelMapping.put(inetPort, proxyChannel);
                                 proxyChannel.attr(CHANNEL_PORT).get().add(inetPort);
                             }
-
                             checkAndClearUserChannels(proxyChannel);
                         }
                     }

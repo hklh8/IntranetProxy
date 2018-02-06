@@ -20,19 +20,19 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
     protected void channelRead0(ChannelHandlerContext ctx, ProxyMessage proxyMessage) throws Exception {
         logger.debug("ProxyMessage received {}", proxyMessage.getType());
         switch (proxyMessage.getType()) {
-            case ProxyMessage.TYPE_HEARTBEAT:
+            case ProxyMessage.TYPE_HEARTBEAT:   // 心跳消息
                 handleHeartbeatMessage(ctx, proxyMessage);
                 break;
-            case ProxyMessage.C_TYPE_AUTH:
+            case ProxyMessage.C_TYPE_AUTH:      // 认证消息，检测clientKey是否正确
                 handleAuthMessage(ctx, proxyMessage);
                 break;
-            case ProxyMessage.TYPE_CONNECT:
+            case ProxyMessage.TYPE_CONNECT:     // 代理后端服务器建立连接消息
                 handleConnectMessage(ctx, proxyMessage);
                 break;
-            case ProxyMessage.TYPE_DISCONNECT:
+            case ProxyMessage.TYPE_DISCONNECT:  // 代理后端服务器断开连接消息
                 handleDisconnectMessage(ctx, proxyMessage);
                 break;
-            case ProxyMessage.P_TYPE_TRANSFER:
+            case ProxyMessage.P_TYPE_TRANSFER:  // 代理数据传输
                 handleTransferMessage(ctx, proxyMessage);
                 break;
             default:

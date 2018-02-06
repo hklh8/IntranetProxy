@@ -53,7 +53,6 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
         realServerBootstrap.group(workerGroup);
         realServerBootstrap.channel(NioSocketChannel.class);
         realServerBootstrap.handler(new ChannelInitializer<SocketChannel>() {
-
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(new RealServerChannelHandler());
@@ -64,7 +63,6 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
         bootstrap.group(workerGroup);
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 if (Config.getInstance().getBooleanValue("ssl.enable", false)) {
@@ -93,26 +91,22 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
     }
 
     private void connectProxyServer() {
-        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener(new ChannelFutureListener() {
+        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                // 连接成功，向服务器发送客户端认证信息（clientKey）
+                ClientChannelMannager.setCmdChannel(future.channel());
+                ProxyMessage proxyMessage = new ProxyMessage();
+                proxyMessage.setType(ProxyMessage.C_TYPE_AUTH);
+                proxyMessage.setUri(config.getStringValue("client.key"));
+                future.channel().writeAndFlush(proxyMessage);
+                sleepTimeMill = 1000;
+                logger.info("connect proxy server success, {}", future.channel());
+            } else {
+                logger.warn("connect proxy server failed", future.cause());
 
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    // 连接成功，向服务器发送客户端认证信息（clientKey）
-                    ClientChannelMannager.setCmdChannel(future.channel());
-                    ProxyMessage proxyMessage = new ProxyMessage();
-                    proxyMessage.setType(ProxyMessage.C_TYPE_AUTH);
-                    proxyMessage.setUri(config.getStringValue("client.key"));
-                    future.channel().writeAndFlush(proxyMessage);
-                    sleepTimeMill = 1000;
-                    logger.info("connect proxy server success, {}", future.channel());
-                } else {
-                    logger.warn("connect proxy server failed", future.cause());
-
-                    // 连接失败，发起重连
-                    reconnectWait();
-                    connectProxyServer();
-                }
+                // 连接失败，发起重连
+                reconnectWait();
+                connectProxyServer();
             }
         });
     }

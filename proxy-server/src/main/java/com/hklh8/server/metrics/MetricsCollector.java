@@ -9,6 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * 数据统计
+ */
 public class MetricsCollector {
 
     private static Map<Integer, MetricsCollector> metricsCollectors = new ConcurrentHashMap<Integer, MetricsCollector>();

@@ -1,7 +1,7 @@
 package com.hklh8.server.controller;
 
-import com.google.gson.reflect.TypeToken;
-import com.hklh8.common.JsonUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hklh8.server.ProxyChannelManager;
 import com.hklh8.server.config.ProxyConfig;
 import com.hklh8.server.dto.ResponseInfo;
@@ -15,14 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Controller
 public class WebController {
-
-    protected static final String AUTH_COOKIE_KEY = "token";
-
     private static Logger logger = LoggerFactory.getLogger(WebController.class);
 
     /**
@@ -54,8 +50,8 @@ public class WebController {
     @ResponseBody
     @RequestMapping("/config/update")
     public Object updateConfig(@RequestBody String config) {
-        List<ProxyConfig.Client> clients = JsonUtil.json2object(config, new TypeToken<List<ProxyConfig.Client>>() {
-        });
+        List<ProxyConfig.Client> clients = JSON.parseArray(config, ProxyConfig.Client.class);
+
         if (clients == null) {
             return ResponseInfo.build(ResponseInfo.CODE_INVILID_PARAMS, "Error json config");
         }
@@ -73,14 +69,13 @@ public class WebController {
     @ResponseBody
     @RequestMapping("/login")
     public Object login(@RequestBody String config) {
-        Map<String, String> loginParams = JsonUtil.json2object(config, new TypeToken<Map<String, String>>() {
-        });
-        if (loginParams == null) {
+        JSONObject jsonObject = JSON.parseObject(config);
+        if (jsonObject == null) {
             return ResponseInfo.build(ResponseInfo.CODE_INVILID_PARAMS, "Error login info");
         }
 
-        String username = loginParams.get("username");
-        String password = loginParams.get("password");
+        String username = jsonObject.getString("username");
+        String password = jsonObject.getString("password");
 
         if (username == null || password == null) {
             return ResponseInfo.build(ResponseInfo.CODE_INVILID_PARAMS, "Error username or password");
@@ -106,7 +101,7 @@ public class WebController {
     @ResponseBody
     @RequestMapping("/metrics/get")
     public Object test4() {
-        return ResponseInfo.build(ResponseInfo.CODE_OK, "success");
+        return ResponseInfo.build(MetricsCollector.getAllMetrics());
     }
 
     @ResponseBody

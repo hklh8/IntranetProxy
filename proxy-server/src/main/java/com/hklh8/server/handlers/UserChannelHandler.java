@@ -22,19 +22,16 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-
         // 当出现异常就关闭连接
         ctx.close();
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf buf) throws Exception {
-
         // 通知代理客户端
         Channel userChannel = ctx.channel();
         Channel proxyChannel = userChannel.attr(Constants.NEXT_CHANNEL).get();
         if (proxyChannel == null) {
-
             // 该端口还没有代理客户端
             ctx.channel().close();
         } else {
@@ -56,7 +53,6 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
         Channel cmdChannel = ProxyChannelManager.getCmdChannel(sa.getPort());
 
         if (cmdChannel == null) {
-
             // 该端口还没有代理客户端
             ctx.channel().close();
         } else {
@@ -83,11 +79,9 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
         InetSocketAddress sa = (InetSocketAddress) userChannel.localAddress();
         Channel cmdChannel = ProxyChannelManager.getCmdChannel(sa.getPort());
         if (cmdChannel == null) {
-
             // 该端口还没有代理客户端
             ctx.channel().close();
         } else {
-
             // 用户连接断开，从控制连接中移除
             String userId = ProxyChannelManager.getUserChannelUserId(userChannel);
             ProxyChannelManager.removeUserChannelFromCmdChannel(cmdChannel, userId);

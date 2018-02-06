@@ -93,14 +93,14 @@ public class SslContextCreator {
             return getClass().getClassLoader().getResourceAsStream(jksPath);
         }
 
-        logger.warn("No keystore has been found in the bundled resources. Scanning filesystem...");
+        logger.error("No keystore has been found in the bundled resources. Scanning filesystem...");
         File jksFile = new File(jksPath);
         if (jksFile.exists()) {
             logger.info("Loading external keystore. Url = {}.", jksFile.getAbsolutePath());
             return new FileInputStream(jksFile);
         }
 
-        logger.warn("The keystore file does not exist. Url = {}.", jksFile.getAbsolutePath());
+        logger.error("The keystore file does not exist. Url = {}.", jksFile.getAbsolutePath());
         return null;
     }
 }

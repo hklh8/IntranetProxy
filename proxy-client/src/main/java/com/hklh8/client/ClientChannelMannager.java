@@ -32,9 +32,9 @@ public class ClientChannelMannager {
 
     private static final int MAX_POOL_SIZE = 100;
 
-    private static Map<String, Channel> realServerChannels = new ConcurrentHashMap<String, Channel>();
+    private static Map<String, Channel> realServerChannels = new ConcurrentHashMap<>();
 
-    private static ConcurrentLinkedQueue<Channel> proxyChannelPool = new ConcurrentLinkedQueue<Channel>();
+    private static ConcurrentLinkedQueue<Channel> proxyChannelPool = new ConcurrentLinkedQueue<>();
 
     private static volatile Channel cmdChannel;
 
@@ -47,16 +47,12 @@ public class ClientChannelMannager {
             return;
         }
 
-        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener(new ChannelFutureListener() {
-
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    borrowListener.success(future.channel());
-                } else {
-                    logger.warn("connect proxy server failed", future.cause());
-                    borrowListener.error(future.cause());
-                }
+        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                borrowListener.success(future.channel());
+            } else {
+                logger.warn("connect proxy server failed", future.cause());
+                borrowListener.error(future.cause());
             }
         });
     }
