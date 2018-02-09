@@ -159,9 +159,4 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
 
         return new SslHandler(sslEngine);
     }
-
-//    public static void main(String[] args) {
-//        ContainerHelper.start(Arrays.asList(new ProxyServerContainer(), new WebConfigContainer()));
-//    }
-
 }
