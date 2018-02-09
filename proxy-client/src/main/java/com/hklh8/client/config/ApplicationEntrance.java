@@ -1,12 +1,11 @@
 package com.hklh8.client.config;
 
 import com.hklh8.client.ProxyClientContainer;
-import com.hklh8.common.container.Container;
 import com.hklh8.common.container.ContainerHelper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * 程序入口
@@ -16,7 +15,7 @@ import java.util.Arrays;
 public class ApplicationEntrance implements CommandLineRunner {
 
     @Override
-    public void run(String... args) throws Exception {
-        ContainerHelper.start(Arrays.asList(new Container[]{new ProxyClientContainer()}));
+    public void run(String... args) {
+        new Thread(() -> ContainerHelper.start(Collections.singletonList(new ProxyClientContainer()))).start();
     }
 }
