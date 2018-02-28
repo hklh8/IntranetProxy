@@ -83,7 +83,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
         }
 
         startUserPort();
-
     }
 
     private void initializeSSLTCPTransport(String host, int port, final SSLContext sslContext) {
