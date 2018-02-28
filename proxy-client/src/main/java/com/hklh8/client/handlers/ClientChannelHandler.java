@@ -3,7 +3,7 @@ package com.hklh8.client.handlers;
 import com.hklh8.client.ClientChannelManager;
 import com.hklh8.client.listener.ChannelStatusListener;
 import com.hklh8.client.listener.ProxyChannelBorrowListener;
-import com.hklh8.common.utils.Config;
+import com.hklh8.client.utils.SpringContext;
 import com.hklh8.common.protocol.Constants;
 import com.hklh8.common.protocol.ProxyMessage;
 import io.netty.bootstrap.Bootstrap;
@@ -31,7 +31,7 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProxyMessage proxyMessage) throws Exception {
-        logger.debug("recieved proxy message, type is {}", proxyMessage.getType());
+        logger.debug("接收代理服务器消息, 消息类型为 {}", proxyMessage.getType());
         switch (proxyMessage.getType()) {
             case ProxyMessage.TYPE_CONNECT:     // 代理后端服务器建立连接消息
                 handleConnectMessage(ctx, proxyMessage);
@@ -52,14 +52,14 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
         if (realServerChannel != null) {
             ByteBuf buf = ctx.alloc().buffer(proxyMessage.getData().length);
             buf.writeBytes(proxyMessage.getData());
-            logger.debug("write data to real server, {}", realServerChannel);
+            logger.debug("发送数据到目标服务器, {}", realServerChannel);
             realServerChannel.writeAndFlush(buf);
         }
     }
 
     private void handleDisconnectMessage(ChannelHandlerContext ctx, ProxyMessage proxyMessage) {
         Channel realServerChannel = ctx.channel().attr(Constants.NEXT_CHANNEL).get();
-        logger.debug("handleDisconnectMessage, {}", realServerChannel);
+        logger.debug("处理用户连接断开, {}", realServerChannel);
         if (realServerChannel != null) {
             ctx.channel().attr(Constants.NEXT_CHANNEL).remove();
             ClientChannelManager.returnProxyChanel(ctx.channel());
@@ -77,7 +77,7 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
             // 连接目标服务器成功
             if (future.isSuccess()) {
                 final Channel realServerChannel = future.channel();
-                logger.debug("connect realserver success, {}", realServerChannel);
+                logger.debug("连接目标服务器成功, {}", realServerChannel);
 
                 realServerChannel.config().setOption(ChannelOption.AUTO_READ, false);
 
@@ -89,10 +89,12 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
                         channel.attr(Constants.NEXT_CHANNEL).set(realServerChannel);
                         realServerChannel.attr(Constants.NEXT_CHANNEL).set(channel);
 
+                        String clientKey = SpringContext.getEnvironment().getProperty("client.key");
+
                         // 远程绑定
                         ProxyMessage proxyMessage1 = new ProxyMessage();
                         proxyMessage1.setType(ProxyMessage.TYPE_CONNECT);
-                        proxyMessage1.setUri(userId + "@" + Config.getInstance().getStringValue("client.key"));
+                        proxyMessage1.setUri(userId + "@" + clientKey);
                         channel.writeAndFlush(proxyMessage1);
 
                         realServerChannel.config().setOption(ChannelOption.AUTO_READ, true);
@@ -148,7 +150,7 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.error("exception caught", cause);
+        logger.error("异常捕获", cause);
         super.exceptionCaught(ctx, cause);
     }
 

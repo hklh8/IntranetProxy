@@ -1,6 +1,7 @@
 package com.hklh8.client.config;
 
 import com.hklh8.client.ProxyClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationEntrance implements CommandLineRunner {
 
+    @Autowired
+    ProxyClient proxyClient;
+
     @Override
     public void run(String... args) {
-        ProxyClient client = new ProxyClient();
-        client.start();
+        proxyClient.start();
         //jvm中增加一个关闭的钩子
-        Runtime.getRuntime().addShutdownHook(new Thread(client::stop));
+        Runtime.getRuntime().addShutdownHook(new Thread(proxyClient::stop));
     }
 }

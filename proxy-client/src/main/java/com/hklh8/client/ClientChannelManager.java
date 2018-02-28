@@ -1,8 +1,8 @@
 package com.hklh8.client;
 
 import com.hklh8.client.listener.ProxyChannelBorrowListener;
-import com.hklh8.common.utils.Config;
 import com.hklh8.common.protocol.Constants;
+import com.hklh8.client.utils.SpringContext;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -37,8 +37,6 @@ public class ClientChannelManager {
 
     private static volatile Channel cmdChannel;
 
-    private static Config config = Config.getInstance();
-
     public static void borrowProxyChanel(Bootstrap bootstrap, final ProxyChannelBorrowListener borrowListener) {
         Channel channel = proxyChannelPool.poll();
         if (channel != null) {
@@ -46,11 +44,14 @@ public class ClientChannelManager {
             return;
         }
 
-        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener((ChannelFutureListener) future -> {
+        String proxyServerHost = SpringContext.getEnvironment().getProperty("proxy.server.host");
+        String proxyServerPort = SpringContext.getEnvironment().getProperty("proxy.server.port");
+
+        bootstrap.connect(proxyServerHost, Integer.parseInt(proxyServerPort)).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 borrowListener.success(future.channel());
             } else {
-                logger.warn("connect proxy server failed", future.cause());
+                logger.warn("连接代理服务器失败", future.cause());
                 borrowListener.error(future.cause());
             }
         });
@@ -63,7 +64,7 @@ public class ClientChannelManager {
             proxyChanel.config().setOption(ChannelOption.AUTO_READ, true);
             proxyChanel.attr(Constants.NEXT_CHANNEL).remove();
             proxyChannelPool.offer(proxyChanel);
-            logger.debug("return ProxyChanel to the pool, channel is {}, pool size is {} ", proxyChanel, proxyChannelPool.size());
+            logger.debug("从连接池返回代理服务器连接, channel 为 {}, 连接池大小为 {} ", proxyChanel, proxyChannelPool.size());
         }
     }
 
@@ -104,7 +105,7 @@ public class ClientChannelManager {
     }
 
     public static void clearRealServerChannels() {
-        logger.warn("channel closed, clear real server channels");
+        logger.warn("channel关闭, 清空目标服务器channels");
 
         Iterator<Entry<String, Channel>> ite = realServerChannels.entrySet().iterator();
         while (ite.hasNext()) {

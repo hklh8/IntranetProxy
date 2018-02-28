@@ -34,7 +34,7 @@ public class RealServerChannelHandler extends SimpleChannelInboundHandler<ByteBu
             proxyMessage.setUri(userId);
             proxyMessage.setData(bytes);
             channel.writeAndFlush(proxyMessage);
-            logger.debug("write data to proxy server, {}, {}", realServerChannel, channel);
+            logger.debug("发送数据到代理服务器, {}, {}", realServerChannel, channel);
         }
     }
 
@@ -73,7 +73,7 @@ public class RealServerChannelHandler extends SimpleChannelInboundHandler<ByteBu
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.error("exception caught", cause);
+        logger.error("异常捕获", cause);
         super.exceptionCaught(ctx, cause);
     }
 }

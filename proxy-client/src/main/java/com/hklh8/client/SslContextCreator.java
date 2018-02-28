@@ -1,6 +1,6 @@
 package com.hklh8.client;
 
-import com.hklh8.common.utils.Config;
+import com.hklh8.client.utils.SpringContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class SslContextCreator {
 
     public SSLContext initSSLContext() {
         logger.info("Checking SSL configuration properties...");
-        final String jksPath = Config.getInstance().getStringValue("ssl.jksPath");
+        final String jksPath = SpringContext.getEnvironment().getProperty("ssl.jksPath");
         logger.info("Initializing SSL context. KeystorePath = {}.", jksPath);
         if (jksPath == null || jksPath.isEmpty()) {
             // key_store_password or key_manager_password are empty
@@ -36,7 +36,7 @@ public class SslContextCreator {
         // if we have the port also the jks then keyStorePassword and
         // keyManagerPassword
         // has to be defined
-        final String keyStorePassword = Config.getInstance().getStringValue("ssl.keyStorePassword");
+        final String keyStorePassword = SpringContext.getEnvironment().getProperty("ssl.keyStorePassword");
         // if client authentification is enabled a trustmanager needs to be
         // added to the ServerContext
 
