@@ -21,9 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * 代理客户端与后端真实服务器连接管理
  */
-public class ClientChannelMannager {
+public class ClientChannelManager {
 
-    private static Logger logger = LoggerFactory.getLogger(ClientChannelMannager.class);
+    private static Logger logger = LoggerFactory.getLogger(ClientChannelManager.class);
 
     private static final AttributeKey<Boolean> USER_CHANNEL_WRITEABLE = AttributeKey.newInstance("user_channel_writeable");
 
@@ -72,7 +72,7 @@ public class ClientChannelMannager {
     }
 
     public static void setCmdChannel(Channel cmdChannel) {
-        ClientChannelMannager.cmdChannel = cmdChannel;
+        ClientChannelManager.cmdChannel = cmdChannel;
     }
 
     public static Channel getCmdChannel() {
@@ -113,7 +113,6 @@ public class ClientChannelMannager {
                 realServerChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }
         }
-
         realServerChannels.clear();
     }
 }

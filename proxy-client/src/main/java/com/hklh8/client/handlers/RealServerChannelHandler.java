@@ -1,6 +1,6 @@
 package com.hklh8.client.handlers;
 
-import com.hklh8.client.ClientChannelMannager;
+import com.hklh8.client.ClientChannelManager;
 import com.hklh8.common.protocol.Constants;
 import com.hklh8.common.protocol.ProxyMessage;
 import io.netty.buffer.ByteBuf;
@@ -28,7 +28,7 @@ public class RealServerChannelHandler extends SimpleChannelInboundHandler<ByteBu
         } else {
             byte[] bytes = new byte[buf.readableBytes()];
             buf.readBytes(bytes);
-            String userId = ClientChannelMannager.getRealServerChannelUserId(realServerChannel);
+            String userId = ClientChannelManager.getRealServerChannelUserId(realServerChannel);
             ProxyMessage proxyMessage = new ProxyMessage();
             proxyMessage.setType(ProxyMessage.P_TYPE_TRANSFER);
             proxyMessage.setUri(userId);
@@ -46,8 +46,8 @@ public class RealServerChannelHandler extends SimpleChannelInboundHandler<ByteBu
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel realServerChannel = ctx.channel();
-        String userId = ClientChannelMannager.getRealServerChannelUserId(realServerChannel);
-        ClientChannelMannager.removeRealServerChannel(userId);
+        String userId = ClientChannelManager.getRealServerChannelUserId(realServerChannel);
+        ClientChannelManager.removeRealServerChannel(userId);
         Channel channel = realServerChannel.attr(Constants.NEXT_CHANNEL).get();
         if (channel != null) {
             logger.debug("channelInactive, {}", realServerChannel);

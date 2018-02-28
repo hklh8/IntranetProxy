@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
-public class ProxyClientContainer implements ChannelStatusListener {
+public class ProxyClient implements ChannelStatusListener {
 
-    private static Logger logger = LoggerFactory.getLogger(ProxyClientContainer.class);
+    private static Logger logger = LoggerFactory.getLogger(ProxyClient.class);
 
     private static final int MAX_FRAME_LENGTH = 1024 * 1024;
 
@@ -49,7 +49,7 @@ public class ProxyClientContainer implements ChannelStatusListener {
 
     private long sleepTimeMill = 1000;
 
-    public ProxyClientContainer() {
+    public ProxyClient() {
         workerGroup = new NioEventLoopGroup();
         realServerBootstrap = new Bootstrap();
         realServerBootstrap.group(workerGroup);
@@ -76,7 +76,7 @@ public class ProxyClientContainer implements ChannelStatusListener {
                 ch.pipeline().addLast(new ProxyMessageDecoder(MAX_FRAME_LENGTH, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH, LENGTH_ADJUSTMENT, INITIAL_BYTES_TO_STRIP));
                 ch.pipeline().addLast(new ProxyMessageEncoder());
                 ch.pipeline().addLast(new IdleCheckHandler(IdleCheckHandler.READ_IDLE_TIME, IdleCheckHandler.WRITE_IDLE_TIME - 10, 0));
-                ch.pipeline().addLast(new ClientChannelHandler(realServerBootstrap, bootstrap, ProxyClientContainer.this));
+                ch.pipeline().addLast(new ClientChannelHandler(realServerBootstrap, bootstrap, ProxyClient.this));
             }
         });
     }
@@ -95,7 +95,7 @@ public class ProxyClientContainer implements ChannelStatusListener {
         bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 // 连接成功，向服务器发送客户端认证信息（clientKey）
-                ClientChannelMannager.setCmdChannel(future.channel());
+                ClientChannelManager.setCmdChannel(future.channel());
                 ProxyMessage proxyMessage = new ProxyMessage();
                 proxyMessage.setType(ProxyMessage.C_TYPE_AUTH);
                 proxyMessage.setUri(config.getStringValue("client.key"));

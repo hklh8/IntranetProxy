@@ -124,7 +124,6 @@ public class ProxyChannelManager {
      * 增加代理服务器端口与代理控制客户端连接的映射关系
      */
     public static void addCmdChannel(List<Integer> ports, String clientKey, Channel channel) {
-
         if (ports == null) {
             throw new IllegalArgumentException("port can not be null");
         }
@@ -139,7 +138,7 @@ public class ProxyChannelManager {
 
         channel.attr(CHANNEL_PORT).set(ports);
         channel.attr(CHANNEL_CLIENT_KEY).set(clientKey);
-        channel.attr(USER_CHANNELS).set(new ConcurrentHashMap<String, Channel>());
+        channel.attr(USER_CHANNELS).set(new ConcurrentHashMap<>());
         cmdChannels.put(clientKey, channel);
     }
 

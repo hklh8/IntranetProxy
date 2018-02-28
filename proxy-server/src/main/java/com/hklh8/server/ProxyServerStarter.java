@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class ProxyServerStarter implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        ProxyServerContainer server = new ProxyServerContainer();
+        ProxyServer server = new ProxyServer();
         server.start();
         //jvm中增加一个关闭的钩子
         Runtime.getRuntime().addShutdownHook(new Thread(server::stop));

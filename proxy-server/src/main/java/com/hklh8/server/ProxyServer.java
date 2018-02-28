@@ -25,7 +25,7 @@ import javax.net.ssl.SSLEngine;
 import java.net.BindException;
 import java.util.List;
 
-public class ProxyServerContainer implements ProxyConfig.ConfigChangedListener {
+public class ProxyServer implements ProxyConfig.ConfigChangedListener {
 
     /**
      * max packet is 2M.
@@ -40,13 +40,13 @@ public class ProxyServerContainer implements ProxyConfig.ConfigChangedListener {
 
     private static final int LENGTH_ADJUSTMENT = 0;
 
-    private static Logger logger = LoggerFactory.getLogger(ProxyServerContainer.class);
+    private static Logger logger = LoggerFactory.getLogger(ProxyServer.class);
 
     private NioEventLoopGroup serverWorkerGroup;
 
     private NioEventLoopGroup serverBossGroup;
 
-    public ProxyServerContainer() {
+    public ProxyServer() {
 
         serverBossGroup = new NioEventLoopGroup();
         serverWorkerGroup = new NioEventLoopGroup();

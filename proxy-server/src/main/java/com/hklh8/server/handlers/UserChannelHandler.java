@@ -67,13 +67,11 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
             proxyMessage.setData(lanInfo.getBytes());
             cmdChannel.writeAndFlush(proxyMessage);
         }
-
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
         // 通知代理客户端
         Channel userChannel = ctx.channel();
         InetSocketAddress sa = (InetSocketAddress) userChannel.localAddress();
@@ -99,19 +97,16 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 proxyChannel.writeAndFlush(proxyMessage);
             }
         }
-
         super.channelInactive(ctx);
     }
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-
         // 通知代理客户端
         Channel userChannel = ctx.channel();
         InetSocketAddress sa = (InetSocketAddress) userChannel.localAddress();
         Channel cmdChannel = ProxyChannelManager.getCmdChannel(sa.getPort());
         if (cmdChannel == null) {
-
             // 该端口还没有代理客户端
             ctx.channel().close();
         } else {
@@ -120,14 +115,11 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 proxyChannel.config().setOption(ChannelOption.AUTO_READ, userChannel.isWritable());
             }
         }
-
         super.channelWritabilityChanged(ctx);
     }
 
     /**
      * 为用户连接产生ID
-     *
-     * @return
      */
     private static String newUserId() {
         return String.valueOf(userIdProducer.incrementAndGet());
