@@ -1,11 +1,8 @@
 package com.hklh8.client.config;
 
 import com.hklh8.client.ProxyClientContainer;
-import com.hklh8.common.container.ContainerHelper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
 
 /**
  * 程序入口
@@ -16,6 +13,9 @@ public class ApplicationEntrance implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        new Thread(() -> ContainerHelper.start(Collections.singletonList(new ProxyClientContainer()))).start();
+        ProxyClientContainer client = new ProxyClientContainer();
+        client.start();
+        //jvm中增加一个关闭的钩子
+        Runtime.getRuntime().addShutdownHook(new Thread(client::stop));
     }
 }

@@ -1,10 +1,9 @@
 package com.hklh8.server;
 
-import com.hklh8.common.utils.Config;
-import com.hklh8.common.container.Container;
 import com.hklh8.common.protocol.IdleCheckHandler;
 import com.hklh8.common.protocol.ProxyMessageDecoder;
 import com.hklh8.common.protocol.ProxyMessageEncoder;
+import com.hklh8.common.utils.Config;
 import com.hklh8.server.config.ProxyConfig;
 import com.hklh8.server.handlers.ServerChannelHandler;
 import com.hklh8.server.handlers.UserChannelHandler;
@@ -26,7 +25,7 @@ import javax.net.ssl.SSLEngine;
 import java.net.BindException;
 import java.util.List;
 
-public class ProxyServerContainer implements Container, ProxyConfig.ConfigChangedListener {
+public class ProxyServerContainer implements ProxyConfig.ConfigChangedListener {
 
     /**
      * max packet is 2M.
@@ -55,7 +54,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
         ProxyConfig.getInstance().addConfigChangedListener(this);
     }
 
-    @Override
     public void start() {
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(serverBossGroup, serverWorkerGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
@@ -143,7 +141,6 @@ public class ProxyServerContainer implements Container, ProxyConfig.ConfigChange
         startUserPort();
     }
 
-    @Override
     public void stop() {
         serverBossGroup.shutdownGracefully();
         serverWorkerGroup.shutdownGracefully();

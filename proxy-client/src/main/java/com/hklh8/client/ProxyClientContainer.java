@@ -3,14 +3,16 @@ package com.hklh8.client;
 import com.hklh8.client.handlers.ClientChannelHandler;
 import com.hklh8.client.handlers.RealServerChannelHandler;
 import com.hklh8.client.listener.ChannelStatusListener;
-import com.hklh8.common.utils.Config;
-import com.hklh8.common.container.Container;
 import com.hklh8.common.protocol.IdleCheckHandler;
 import com.hklh8.common.protocol.ProxyMessage;
 import com.hklh8.common.protocol.ProxyMessageDecoder;
 import com.hklh8.common.protocol.ProxyMessageEncoder;
+import com.hklh8.common.utils.Config;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -21,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
-public class ProxyClientContainer implements Container, ChannelStatusListener {
+public class ProxyClientContainer implements ChannelStatusListener {
 
     private static Logger logger = LoggerFactory.getLogger(ProxyClientContainer.class);
 
@@ -79,7 +81,6 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
         });
     }
 
-    @Override
     public void start() {
         connectProxyServer();
     }
@@ -111,7 +112,6 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
         });
     }
 
-    @Override
     public void stop() {
         workerGroup.shutdownGracefully();
     }
