@@ -3,11 +3,11 @@ package com.hklh8.server;
 import com.hklh8.common.protocol.IdleCheckHandler;
 import com.hklh8.common.protocol.ProxyMessageDecoder;
 import com.hklh8.common.protocol.ProxyMessageEncoder;
-import com.hklh8.common.utils.Config;
 import com.hklh8.server.config.ProxyConfig;
 import com.hklh8.server.handlers.ServerChannelHandler;
 import com.hklh8.server.handlers.UserChannelHandler;
 import com.hklh8.server.metrics.handler.BytesMetricsHandler;
+import com.hklh8.server.utils.PropertiesValue;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -27,9 +27,7 @@ import java.util.List;
 
 public class ProxyServer implements ProxyConfig.ConfigChangedListener {
 
-    /**
-     * max packet is 2M.
-     */
+    //max packet is 2M.
     private static final int MAX_FRAME_LENGTH = 2 * 1024 * 1024;
 
     private static final int LENGTH_FIELD_OFFSET = 0;
@@ -67,16 +65,19 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
             }
         });
 
+        String proxyServerBind = PropertiesValue.getStringValue("proxy.server.bind", "0.0.0.0");
+        int proxyServerPort = PropertiesValue.getIntValue("proxy.server.port", 4900);
+
         try {
-            bootstrap.bind(ProxyConfig.getInstance().getServerBind(), ProxyConfig.getInstance().getServerPort()).get();
-            logger.info("proxy server start on port " + ProxyConfig.getInstance().getServerPort());
+            bootstrap.bind(proxyServerBind, proxyServerPort).get();
+            logger.info("proxy server start on port " + proxyServerPort);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
 
-        if (Config.getInstance().getBooleanValue("server.ssl.enable", false)) {
-            String host = Config.getInstance().getStringValue("server.ssl.bind", "0.0.0.0");
-            int port = Config.getInstance().getIntValue("server.ssl.port");
+        if (PropertiesValue.getBooleanValue("ssl.enable", false)) {
+            String host = PropertiesValue.getStringValue("ssl.bind", "0.0.0.0");
+            int port = PropertiesValue.getIntValue("ssl.port", 9443);
             initializeSSLTCPTransport(host, port, new SslContextCreator().initSSLContext());
         }
 
@@ -90,7 +91,7 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
                 try {
-                    pipeline.addLast("ssl", createSslHandler(sslContext, Config.getInstance().getBooleanValue("server.ssl.needsClientAuth", false)));
+                    pipeline.addLast("ssl", createSslHandler(sslContext, PropertiesValue.getBooleanValue("ssl.needsClientAuth", false)));
                     ch.pipeline().addLast(new ProxyMessageDecoder(MAX_FRAME_LENGTH, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH, LENGTH_ADJUSTMENT, INITIAL_BYTES_TO_STRIP));
                     ch.pipeline().addLast(new ProxyMessageEncoder());
                     ch.pipeline().addLast(new IdleCheckHandler(IdleCheckHandler.READ_IDLE_TIME, IdleCheckHandler.WRITE_IDLE_TIME, 0));

@@ -1,6 +1,6 @@
 package com.hklh8.server;
 
-import com.hklh8.common.utils.Config;
+import com.hklh8.server.utils.PropertiesValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class SslContextCreator {
 
     public SSLContext initSSLContext() {
         logger.info("Checking SSL configuration properties...");
-        final String jksPath = Config.getInstance().getStringValue("server.ssl.jksPath");
+        final String jksPath = PropertiesValue.getStringValue("ssl.jksPath");
         logger.info("Initializing SSL context. KeystorePath = {}.", jksPath);
         if (jksPath == null || jksPath.isEmpty()) {
             // key_store_password or key_manager_password are empty
@@ -30,8 +30,8 @@ public class SslContextCreator {
         // if we have the port also the jks then keyStorePassword and
         // keyManagerPassword
         // has to be defined
-        final String keyStorePassword = Config.getInstance().getStringValue("server.ssl.keyStorePassword");
-        final String keyManagerPassword = Config.getInstance().getStringValue("server.ssl.keyManagerPassword");
+        final String keyStorePassword = PropertiesValue.getStringValue("ssl.keyStorePassword");
+        final String keyManagerPassword = PropertiesValue.getStringValue("ssl.keyManagerPassword");
         if (keyStorePassword == null || keyStorePassword.isEmpty()) {
 
             // key_store_password or key_manager_password are empty
@@ -48,7 +48,7 @@ public class SslContextCreator {
 
         // if client authentification is enabled a trustmanager needs to be
         // added to the ServerContext
-        boolean needsClientAuth = Config.getInstance().getBooleanValue("server.ssl.needsClientAuth", false);
+        boolean needsClientAuth = PropertiesValue.getBooleanValue("ssl.needsClientAuth", false);
 
         try {
             logger.info("Loading keystore. KeystorePath = {}.", jksPath);

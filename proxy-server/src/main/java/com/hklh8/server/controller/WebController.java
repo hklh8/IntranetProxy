@@ -6,6 +6,7 @@ import com.hklh8.server.ProxyChannelManager;
 import com.hklh8.server.config.ProxyConfig;
 import com.hklh8.server.dto.ResponseInfo;
 import com.hklh8.server.metrics.MetricsCollector;
+import com.hklh8.server.utils.PropertiesValue;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +82,8 @@ public class WebController {
             return ResponseInfo.build(ResponseInfo.CODE_INVILID_PARAMS, "Error username or password");
         }
 
-        if (username.equals(ProxyConfig.getInstance().getConfigAdminUsername()) && password.equals(ProxyConfig.getInstance().getConfigAdminPassword())) {
+        if (username.equals(PropertiesValue.getStringValue("config.admin.username", "admin")) &&
+                password.equals(PropertiesValue.getStringValue("config.admin.password", "admin"))) {
             token = UUID.randomUUID().toString().replace("-", "");
             return ResponseInfo.build(token);
         }

@@ -1,7 +1,6 @@
 package com.hklh8.server.config;
 
 import com.alibaba.fastjson.JSON;
-import com.hklh8.common.utils.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,46 +23,14 @@ public class ProxyConfig implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(ProxyConfig.class);
 
     static {
-
         // 代理配置信息存放在用户根目录下
         String dataPath = System.getProperty("user.home") + "/" + ".intranetProxy/";
         File file = new File(dataPath);
         if (!file.isDirectory()) {
             file.mkdir();
         }
-
         CONFIG_FILE = dataPath + "/config.json";
     }
-
-    /**
-     * 代理服务器绑定主机host
-     */
-    private String serverBind;
-
-    /**
-     * 代理服务器与代理客户端通信端口
-     */
-    private Integer serverPort;
-
-    /**
-     * 配置服务绑定主机host
-     */
-    private String configServerBind;
-
-    /**
-     * 配置服务端口
-     */
-    private Integer configServerPort;
-
-    /**
-     * 配置服务管理员用户名
-     */
-    private String configAdminUsername;
-
-    /**
-     * 配置服务管理员密码
-     */
-    private String configAdminPassword;
 
     /**
      * 代理客户端，支持多个客户端
@@ -92,72 +59,7 @@ public class ProxyConfig implements Serializable {
     private List<ConfigChangedListener> configChangedListeners = new ArrayList<>();
 
     private ProxyConfig() {
-
-        // 代理服务器主机和端口配置初始化
-        this.serverPort = Config.getInstance().getIntValue("server.port");
-        this.serverBind = Config.getInstance().getStringValue("server.bind", "0.0.0.0");
-
-        // 配置服务器主机和端口配置初始化
-        this.configServerPort = Config.getInstance().getIntValue("config.server.port");
-        this.configServerBind = Config.getInstance().getStringValue("config.server.bind", "0.0.0.0");
-
-        // 配置服务器管理员登录认证信息
-        this.configAdminUsername = Config.getInstance().getStringValue("config.admin.username");
-        this.configAdminPassword = Config.getInstance().getStringValue("config.admin.password");
-
-        logger.info(
-                "config init serverBind {}, serverPort {}, configServerBind {}, configServerPort {}, configAdminUsername {}, configAdminPassword {}",
-                serverBind, serverPort, configServerBind, configServerPort, configAdminUsername, configAdminPassword);
-
         update(null);
-    }
-
-    public Integer getServerPort() {
-        return this.serverPort;
-    }
-
-    public String getServerBind() {
-        return serverBind;
-    }
-
-    public void setServerBind(String serverBind) {
-        this.serverBind = serverBind;
-    }
-
-    public String getConfigServerBind() {
-        return configServerBind;
-    }
-
-    public void setConfigServerBind(String configServerBind) {
-        this.configServerBind = configServerBind;
-    }
-
-    public Integer getConfigServerPort() {
-        return configServerPort;
-    }
-
-    public void setConfigServerPort(Integer configServerPort) {
-        this.configServerPort = configServerPort;
-    }
-
-    public String getConfigAdminUsername() {
-        return configAdminUsername;
-    }
-
-    public void setConfigAdminUsername(String configAdminUsername) {
-        this.configAdminUsername = configAdminUsername;
-    }
-
-    public String getConfigAdminPassword() {
-        return configAdminPassword;
-    }
-
-    public void setConfigAdminPassword(String configAdminPassword) {
-        this.configAdminPassword = configAdminPassword;
-    }
-
-    public void setServerPort(Integer serverPort) {
-        this.serverPort = serverPort;
     }
 
     public List<Client> getClients() {
