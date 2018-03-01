@@ -25,7 +25,7 @@ public class ProxyMessageEncoder extends MessageToByteEncoder<ProxyMessage> {
             bodyLength += msg.getData().length;
         }
 
-        // write the total packet length but without length field's length.
+        //写入整个包的长度(不包含bodyLength字段长度)
         out.writeInt(bodyLength);
 
         out.writeByte(msg.getType());

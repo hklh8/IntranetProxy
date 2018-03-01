@@ -54,6 +54,7 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
         in.readBytes(data);
         proxyMessage.setData(data);
 
+        //释放ByteBuf的引用计数。
         in.release();
 
         return proxyMessage;
