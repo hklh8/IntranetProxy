@@ -23,8 +23,8 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
     }
 
     @Override
-    protected ProxyMessage decode(ChannelHandlerContext ctx, ByteBuf in2) throws Exception {
-        ByteBuf in = (ByteBuf) super.decode(ctx, in2);
+    protected ProxyMessage decode(ChannelHandlerContext ctx, ByteBuf buf) throws Exception {
+        ByteBuf in = (ByteBuf) super.decode(ctx, buf);
         if (in == null) {
             return null;
         }

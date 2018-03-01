@@ -27,14 +27,19 @@ public class ProxyClient implements ChannelStatusListener {
 
     private static Logger logger = LoggerFactory.getLogger(ProxyClient.class);
 
+    //解码时，处理每个帧数据的最大长度
     private static final int MAX_FRAME_LENGTH = 1024 * 1024;
 
+    //该帧数据中，存放该帧数据的长度的数据的起始位置
     private static final int LENGTH_FIELD_OFFSET = 0;
 
+    //记录该帧数据长度的字段本身的长度
     private static final int LENGTH_FIELD_LENGTH = 4;
 
+    //解析的时候需要跳过的字节数
     private static final int INITIAL_BYTES_TO_STRIP = 0;
 
+    //修改帧数据长度字段中定义的值，可以为负数
     private static final int LENGTH_ADJUSTMENT = 0;
 
     private NioEventLoopGroup workerGroup;
