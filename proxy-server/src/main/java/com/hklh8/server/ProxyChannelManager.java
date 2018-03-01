@@ -125,7 +125,7 @@ public class ProxyChannelManager {
      */
     public static void addCmdChannel(List<Integer> ports, String clientKey, Channel channel) {
         if (ports == null) {
-            throw new IllegalArgumentException("port can not be null");
+            throw new IllegalArgumentException("port不能为null");
         }
 
         // 客户端（proxy-client）相对较少，这里同步的比较重
@@ -146,7 +146,7 @@ public class ProxyChannelManager {
      * 代理客户端连接断开后清除关系
      */
     public static void removeCmdChannel(Channel channel) {
-        logger.warn("channel closed, clear user channels, {}", channel);
+        logger.warn("连接关闭,清空user channels {}", channel);
         if (channel.attr(CHANNEL_PORT).get() == null) {
             return;
         }
@@ -171,7 +171,7 @@ public class ProxyChannelManager {
         }
 
         if (channel.isActive()) {
-            logger.info("disconnect proxy channel {}", channel);
+            logger.info("断开代理连接 {}", channel);
             channel.close();
         }
 
@@ -181,7 +181,7 @@ public class ProxyChannelManager {
             Channel userChannel = userChannels.get(ite.next());
             if (userChannel.isActive()) {
                 userChannel.close();
-                logger.info("disconnect user channel {}", userChannel);
+                logger.info("断开用户连接 {}", userChannel);
             }
         }
     }

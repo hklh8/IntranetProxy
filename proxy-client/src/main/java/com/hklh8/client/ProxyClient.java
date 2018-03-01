@@ -39,7 +39,7 @@ public class ProxyClient implements ChannelStatusListener {
     //解析的时候需要跳过的字节数
     private static final int INITIAL_BYTES_TO_STRIP = 0;
 
-    //修改帧数据长度字段中定义的值，可以为负数
+    //长度调节值，在总长被定义为包含包头长度时，修正信息长度，可以为负数
     private static final int LENGTH_ADJUSTMENT = 0;
 
     private NioEventLoopGroup workerGroup;

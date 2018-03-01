@@ -37,9 +37,9 @@ public class WebController {
         for (ProxyConfig.Client client : clients) {
             Channel channel = ProxyChannelManager.getCmdChannel(client.getClientKey());
             if (channel != null) {
-                client.setStatus(1);// online
+                client.setStatus(1);//上线
             } else {
-                client.setStatus(0);// offline
+                client.setStatus(0);//下线
             }
         }
         return ResponseInfo.build(ProxyConfig.getInstance().getClients());

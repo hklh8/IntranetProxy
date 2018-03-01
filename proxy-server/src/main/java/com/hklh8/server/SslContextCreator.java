@@ -18,70 +18,54 @@ public class SslContextCreator {
     private static Logger logger = LoggerFactory.getLogger(SslContextCreator.class);
 
     public SSLContext initSSLContext() {
-        logger.info("Checking SSL configuration properties...");
+        logger.info("检查SSL配置属性...");
         final String jksPath = PropertiesValue.getStringValue("ssl.jksPath");
-        logger.info("Initializing SSL context. KeystorePath = {}.", jksPath);
+        logger.info("初始化SSL context. KeystorePath = {}.", jksPath);
         if (jksPath == null || jksPath.isEmpty()) {
-            // key_store_password or key_manager_password are empty
-            logger.warn("The keystore path is null or empty. The SSL context won't be initialized.");
+            logger.warn("keystore路径是null或空。SSL context不会初始化。");
             return null;
         }
 
-        // if we have the port also the jks then keyStorePassword and
-        // keyManagerPassword
-        // has to be defined
         final String keyStorePassword = PropertiesValue.getStringValue("ssl.keyStorePassword");
         final String keyManagerPassword = PropertiesValue.getStringValue("ssl.keyManagerPassword");
         if (keyStorePassword == null || keyStorePassword.isEmpty()) {
-
-            // key_store_password or key_manager_password are empty
-            logger.warn("The keystore password is null or empty. The SSL context won't be initialized.");
+            logger.warn("keyManagerPassword是null或空。SSL context不会初始化。");
             return null;
         }
 
         if (keyManagerPassword == null || keyManagerPassword.isEmpty()) {
-
-            // key_manager_password or key_manager_password are empty
-            logger.warn("The key manager password is null or empty. The SSL context won't be initialized.");
+            logger.warn("keyManagerPassword是null或空。SSL context不会初始化。");
             return null;
         }
 
-        // if client authentification is enabled a trustmanager needs to be
-        // added to the ServerContext
         boolean needsClientAuth = PropertiesValue.getBooleanValue("ssl.needsClientAuth", false);
 
         try {
-            logger.info("Loading keystore. KeystorePath = {}.", jksPath);
+            logger.info("加载 keystore. KeystorePath = {}.", jksPath);
             InputStream jksInputStream = jksDatastore(jksPath);
             SSLContext serverContext = SSLContext.getInstance("TLS");
             final KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(jksInputStream, keyStorePassword.toCharArray());
-            logger.info("Initializing key manager...");
+            logger.info("初始化 key manager...");
             final KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(ks, keyManagerPassword.toCharArray());
             TrustManager[] trustManagers = null;
             if (needsClientAuth) {
-                logger.warn(
-                        "Client authentication is enabled. The keystore will be used as a truststore. KeystorePath = {}.",
-                        jksPath);
-                // use keystore as truststore, as server needs to trust
-                // certificates signed by the
-                // server certificates
+                logger.warn("启用客户端身份验证。 keystore将作为信任库。 KeystorePath = {}.", jksPath);
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                 tmf.init(ks);
                 trustManagers = tmf.getTrustManagers();
             }
 
-            // init sslContext
-            logger.info("Initializing SSL context...");
+            //初始化 sslContext
+            logger.info("初始化 SSL context...");
             serverContext.init(kmf.getKeyManagers(), trustManagers, null);
-            logger.info("The SSL context has been initialized successfully.");
+            logger.info("SSL context 初始化成功...");
 
             return serverContext;
         } catch (NoSuchAlgorithmException | UnrecoverableKeyException | CertificateException | KeyStoreException
                 | KeyManagementException | IOException ex) {
-            logger.error("Unable to initialize SSL context. Cause = {}, errorMessage = {}.", ex.getCause(),
-                    ex.getMessage());
+            logger.error("不能初始化 SSL context. Cause = {}, errorMessage = {}.", ex.getCause(), ex.getMessage());
             return null;
         }
     }
@@ -93,14 +77,14 @@ public class SslContextCreator {
             return getClass().getClassLoader().getResourceAsStream(jksPath);
         }
 
-        logger.error("No keystore has been found in the bundled resources. Scanning filesystem...");
+        logger.error("在resources文件夹没有找到keystore。 扫描外部路径...");
         File jksFile = new File(jksPath);
         if (jksFile.exists()) {
-            logger.info("Loading external keystore. Url = {}.", jksFile.getAbsolutePath());
+            logger.info("加载外部keystore。 Url = {}.", jksFile.getAbsolutePath());
             return new FileInputStream(jksFile);
         }
 
-        logger.error("The keystore file does not exist. Url = {}.", jksFile.getAbsolutePath());
+        logger.error("keystore文件不存在。 Url = {}.", jksFile.getAbsolutePath());
         return null;
     }
 }

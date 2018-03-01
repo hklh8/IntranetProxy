@@ -26,12 +26,12 @@ public class IdleCheckHandler extends IdleStateHandler {
     @Override
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
         if (IdleStateEvent.FIRST_WRITER_IDLE_STATE_EVENT == evt) {
-            logger.debug("channel write timeout {}", ctx.channel());
+            logger.debug("连接写超时 {}", ctx.channel());
             ProxyMessage proxyMessage = new ProxyMessage();
             proxyMessage.setType(ProxyMessage.TYPE_HEARTBEAT);
             ctx.channel().writeAndFlush(proxyMessage);
         } else if (IdleStateEvent.FIRST_READER_IDLE_STATE_EVENT == evt) {
-            logger.warn("channel read timeout {}", ctx.channel());
+            logger.warn("连接读超时 {}", ctx.channel());
             ctx.channel().close();
         }
         super.channelIdle(ctx, evt);

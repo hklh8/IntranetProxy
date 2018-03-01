@@ -48,7 +48,7 @@ public class MetricsCollector {
     }
 
     public static List<Metrics> getAndResetAllMetrics() {
-        List<Metrics> allMetrics = new ArrayList<Metrics>();
+        List<Metrics> allMetrics = new ArrayList<>();
         Iterator<Entry<Integer, MetricsCollector>> ite = metricsCollectors.entrySet().iterator();
         while (ite.hasNext()) {
             allMetrics.add(ite.next().getValue().getAndResetMetrics());
@@ -58,7 +58,7 @@ public class MetricsCollector {
     }
 
     public static List<Metrics> getAllMetrics() {
-        List<Metrics> allMetrics = new ArrayList<Metrics>();
+        List<Metrics> allMetrics = new ArrayList<>();
         Iterator<Entry<Integer, MetricsCollector>> ite = metricsCollectors.entrySet().iterator();
         while (ite.hasNext()) {
             allMetrics.add(ite.next().getValue().getMetrics());

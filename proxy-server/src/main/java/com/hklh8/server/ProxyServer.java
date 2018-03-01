@@ -40,7 +40,7 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
     //解析的时候需要跳过的字节数
     private static final int INITIAL_BYTES_TO_STRIP = 0;
 
-    //修改帧数据长度字段中定义的值，可以为负数
+    //长度调节值，在总长被定义为包含包头长度时，修正信息长度，可以为负数
     private static final int LENGTH_ADJUSTMENT = 0;
 
     private static Logger logger = LoggerFactory.getLogger(ProxyServer.class);
@@ -75,7 +75,7 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
 
         try {
             bootstrap.bind(proxyServerBind, proxyServerPort).get();
-            logger.info("proxy server start on port " + proxyServerPort);
+            logger.info("代理服务器启动，监听端口 " + proxyServerPort);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -102,7 +102,7 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
                     ch.pipeline().addLast(new IdleCheckHandler(IdleCheckHandler.READ_IDLE_TIME, IdleCheckHandler.WRITE_IDLE_TIME, 0));
                     ch.pipeline().addLast(new ServerChannelHandler());
                 } catch (Throwable th) {
-                    logger.error("Severe error during pipeline creation", th);
+                    logger.error("创建pipeline时，出现错误", th);
                     throw th;
                 }
             }
@@ -111,9 +111,9 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
             // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(host, port);
             f.sync();
-            logger.info("proxy ssl server start on port {}", port);
+            logger.info("SSL服务启动，监听端口 {}", port);
         } catch (InterruptedException ex) {
-            logger.error("An interruptedException was caught while initializing server", ex);
+            logger.error("初始化SSL服务出错", ex);
         }
     }
 
@@ -131,7 +131,7 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
         for (int port : ports) {
             try {
                 bootstrap.bind(port).get();
-                logger.info("bind user port " + port);
+                logger.info("绑定用户端口 " + port);
             } catch (Exception ex) {
                 // BindException表示该端口已经绑定过
                 if (!(ex.getCause() instanceof BindException)) {
