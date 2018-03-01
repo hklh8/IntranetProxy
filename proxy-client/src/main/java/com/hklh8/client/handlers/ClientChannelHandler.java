@@ -3,7 +3,7 @@ package com.hklh8.client.handlers;
 import com.hklh8.client.ClientChannelManager;
 import com.hklh8.client.listener.ChannelStatusListener;
 import com.hklh8.client.listener.ProxyChannelBorrowListener;
-import com.hklh8.client.utils.SpringContext;
+import com.hklh8.client.utils.PropertiesValue;
 import com.hklh8.common.protocol.Constants;
 import com.hklh8.common.protocol.ProxyMessage;
 import io.netty.bootstrap.Bootstrap;
@@ -89,12 +89,10 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
                         channel.attr(Constants.NEXT_CHANNEL).set(realServerChannel);
                         realServerChannel.attr(Constants.NEXT_CHANNEL).set(channel);
 
-                        String clientKey = SpringContext.getEnvironment().getProperty("client.key");
-
                         // 远程绑定
                         ProxyMessage proxyMessage1 = new ProxyMessage();
                         proxyMessage1.setType(ProxyMessage.TYPE_CONNECT);
-                        proxyMessage1.setUri(userId + "@" + clientKey);
+                        proxyMessage1.setUri(userId + "@" + PropertiesValue.getStringValue("client.key"));
                         channel.writeAndFlush(proxyMessage1);
 
                         realServerChannel.config().setOption(ChannelOption.AUTO_READ, true);

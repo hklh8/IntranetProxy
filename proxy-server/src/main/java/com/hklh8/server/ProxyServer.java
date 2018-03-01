@@ -77,7 +77,7 @@ public class ProxyServer implements ProxyConfig.ConfigChangedListener {
 
         if (PropertiesValue.getBooleanValue("ssl.enable", false)) {
             String host = PropertiesValue.getStringValue("ssl.bind", "0.0.0.0");
-            int port = PropertiesValue.getIntValue("ssl.port", 9443);
+            int port = PropertiesValue.getIntValue("ssl.port", 4993);
             initializeSSLTCPTransport(host, port, new SslContextCreator().initSSLContext());
         }
 

@@ -1,8 +1,8 @@
 package com.hklh8.client;
 
 import com.hklh8.client.listener.ProxyChannelBorrowListener;
+import com.hklh8.client.utils.PropertiesValue;
 import com.hklh8.common.protocol.Constants;
-import com.hklh8.client.utils.SpringContext;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -44,10 +44,10 @@ public class ClientChannelManager {
             return;
         }
 
-        String proxyServerHost = SpringContext.getEnvironment().getProperty("proxy.server.host");
-        String proxyServerPort = SpringContext.getEnvironment().getProperty("proxy.server.port");
+        String proxyServerHost = PropertiesValue.getStringValue("proxy.server.host");
+        int proxyServerPort = PropertiesValue.getIntValue("proxy.server.port", 4900);
 
-        bootstrap.connect(proxyServerHost, Integer.parseInt(proxyServerPort)).addListener((ChannelFutureListener) future -> {
+        bootstrap.connect(proxyServerHost, proxyServerPort).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 borrowListener.success(future.channel());
             } else {

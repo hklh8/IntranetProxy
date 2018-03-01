@@ -3,6 +3,7 @@ package com.hklh8.client;
 import com.hklh8.client.handlers.ClientChannelHandler;
 import com.hklh8.client.handlers.RealServerChannelHandler;
 import com.hklh8.client.listener.ChannelStatusListener;
+import com.hklh8.client.utils.PropertiesValue;
 import com.hklh8.common.protocol.IdleCheckHandler;
 import com.hklh8.common.protocol.ProxyMessage;
 import com.hklh8.common.protocol.ProxyMessageDecoder;
@@ -18,29 +19,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
-@Service
 public class ProxyClient implements ChannelStatusListener {
 
     private static Logger logger = LoggerFactory.getLogger(ProxyClient.class);
-
-    @Value("${ssl.enable:false}")
-    private boolean sslEnable;
-
-    @Value("${client.key}")
-    private String clientKey;
-
-    @Value("${proxy.server.host}")
-    private String proxyServerHost;
-
-    @Value("${proxy.server.port}")
-    private int proxyServerPort;
-
 
     private static final int MAX_FRAME_LENGTH = 1024 * 1024;
 
@@ -80,7 +65,7 @@ public class ProxyClient implements ChannelStatusListener {
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
-                if (sslEnable) {
+                if (PropertiesValue.getBooleanValue("ssl.enable", false)) {
                     if (sslContext == null) {
                         sslContext = SslContextCreator.createSSLContext();
                     }
@@ -105,13 +90,17 @@ public class ProxyClient implements ChannelStatusListener {
     }
 
     private void connectProxyServer() {
+
+        String proxyServerHost = PropertiesValue.getStringValue("proxy.server.host");
+        int proxyServerPort = PropertiesValue.getIntValue("proxy.server.port", 4900);
+
         bootstrap.connect(proxyServerHost, proxyServerPort).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 // 连接成功，向服务器发送客户端认证信息（clientKey）
                 ClientChannelManager.setCmdChannel(future.channel());
                 ProxyMessage proxyMessage = new ProxyMessage();
                 proxyMessage.setType(ProxyMessage.C_TYPE_AUTH);
-                proxyMessage.setUri(clientKey);
+                proxyMessage.setUri(PropertiesValue.getStringValue("client.key"));
                 future.channel().writeAndFlush(proxyMessage);
                 sleepTimeMill = 1000;
                 logger.info("连接代理服务器成功, {}", future.channel());
