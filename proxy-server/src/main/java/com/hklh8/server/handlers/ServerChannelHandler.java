@@ -114,7 +114,6 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
 
     private void handleHeartbeatMessage(ChannelHandlerContext ctx, ProxyMessage proxyMessage) {
         ProxyMessage heartbeatMessage = new ProxyMessage();
-        heartbeatMessage.setSerialNumber(heartbeatMessage.getSerialNumber());
         heartbeatMessage.setType(ProxyMessage.TYPE_HEARTBEAT);
         logger.debug("响应心跳消息 {}", ctx.channel());
         ctx.channel().writeAndFlush(heartbeatMessage);
